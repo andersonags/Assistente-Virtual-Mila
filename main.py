@@ -1,12 +1,23 @@
 import speech_recognition as sr
+import pyttsx3
 
-# Cria um Reconhecedor
-r = sr.Recognizer()
+audio = sr.Recognizer()
+machine = pyttsx3.init()
 
-# Abrir o Microfone para captura
-with sr.Microphone() as source:
-    print('Ouvindo..')
-while True:
-    audio = r.listen(source) # Define Microfone como fonte de áudio
+def execute_comand():
 
-    print(r.recognizer_google(audio, language='pt-br'))
+    try:
+        with sr.Microphone() as source:
+            print('Ouvindo...')
+            voz = audio.listen(source)
+            comand = audio.recognize_google(voz, language='pt-br')
+            comand = comand.lower()
+            if 'mila' in comand:
+                comand = comand.replace('mila', '')
+                machine.say(comand)
+                machine.runAndWait()
+
+    except:
+        print('Microfone não está ok!')
+
+    return comand 
