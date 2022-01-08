@@ -1,33 +1,23 @@
-import speech_recognition as sr
-import pyttsx3
-import datetime
+#!/usr/bin/env python3
 
-audio = sr.Recognizer()
-machine = pyttsx3.init()
+from vosk import Model, KaldiRecognizer
+import os
+import pyaudio
 
-def execute_comand():
+model = Model('model')
+rec = KaldiRecognizer(model, 16000)
 
-    try:
-        with sr.Microphone() as source:
-            print('Ouvindo...')
-            voz = audio.listen(source)
-            comand = audio.recognize_google(voz, language='pt-Br')
-            comand = comand.lower()
-            if 'mila' in comand:
-                comand = comand.replace('mila', '')
-                machine.say(comand)
-                machine.runAndWait()
+p = pyaudio.PyAudio()
+stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+stream.start_stream()
 
-    except:
-        print('Microfone não está ok!')
+while True:
+    data = stream.read(4000)
+    if len(data) == 0:
+        break
+    if rec.AcceptWaveform(data):
+        print(rec.Result())
+    else:
+        print(rec.PartialResult())
 
-    return comand 
-
-def comand_voz_user():
-    comand = execute_comand()
-    if 'hour' in comand:
-        hour = datetime.datetime.now().strftime('%H:%M')
-        machine.say('Agora são' + hour)
-        machine.runAndWait()
-
-comand_voz_user()
+print(rec.FinalResult())
