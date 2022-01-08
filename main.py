@@ -11,7 +11,7 @@ def execute_comand():
         with sr.Microphone() as source:
             print('Ouvindo...')
             voz = audio.listen(source)
-            comand = audio.recognize_google(voz, language='pt-br')
+            comand = audio.recognize_google(voz, language='pt-Br')
             comand = comand.lower()
             if 'mila' in comand:
                 comand = comand.replace('mila', '')
