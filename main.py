@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import pyttsx3
+import datetime
 
 audio = sr.Recognizer()
 machine = pyttsx3.init()
@@ -21,3 +22,12 @@ def execute_comand():
         print('Microfone não está ok!')
 
     return comand 
+
+def comand_voz_user():
+    comand = execute_comand()
+    if 'hour' in comand:
+        hour = datetime.datetime.now().strftime('%H:%M')
+        machine.say('Agora são' + hour)
+        machine.runAndWait()
+
+comand_voz_user()
